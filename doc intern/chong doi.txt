@@ -1,0 +1,29 @@
+Chức năng chống dội nút nhấn (debouncing) là một kỹ thuật quan trọng khi sử dụng các nút nhấn trong các dự án điện tử. Khi bạn nhấn một nút, các tiếp điểm kim loại bên trong nút đóng lại để tạo ra một mạch điện. Tuy nhiên, do các đặc tính vật lý, các tiếp điểm này không chỉ đóng một lần một cách sạch sẽ và hoàn hảo. Thay vào đó, chúng có thể "dội" hay "nhảy" nhanh giữa trạng thái đóng và mở ngay sau khi bạn nhấn nút, trước khi cuối cùng ổn định ở trạng thái đóng.
+
+Điều này có thể gây ra nhiều tín hiệu mở/đóng cực kỳ nhanh (trong vài micro giây đến mili giây), khiến cho vi mạch điều khiển nhận nhầm là nhiều lần nhấn, dẫn đến hành vi không mong muốn trong chương trình của bạn. Ví dụ, một lần nhấn có thể được đọc như là nhiều lần nhấn.
+
+Chức năng chống dội giải quyết vấn đề này bằng cách:
+
+Định thời (Timing): Chỉ chấp nhận một thay đổi trạng thái của nút nhấn sau một khoảng thời gian nhất định, gọi là thời gian chống dội. Khoảng thời gian này đủ dài để các tiếp điểm nút nhấn ổn định (thường là khoảng vài chục mili giây).
+
+Kiểm tra trạng thái: Trước khi chấp nhận một sự thay đổi trạng thái, chương trình sẽ kiểm tra xem trạng thái đó có ổn định không (ví dụ, nút nhấn vẫn đang được giữ xuống sau khi qua khoảng thời gian chống dội).
+
+Bộ đếm/Nhớ thời gian: Ghi nhận thời điểm cuối cùng mà nút nhấn được nhấn hợp lệ, và so sánh thời điểm hiện tại với thời điểm đó để xác định liệu có cần phải chống dội hay không.
+
+Kỹ thuật này đảm bảo rằng chương trình của bạn chỉ phản ứng với các nhấn nút có ý định thực sự từ người dùng và bỏ qua các tín hiệu nhiễu do hiện tượng dội gây ra.
+#define DEBOUNCE_TIME 50 // debounce time in milliseconds
+
+static volatile uint32_t lastButtonPressTime = 0;
+
+static void INT0_CallBack(void) {
+    uint32_t currentTime = _CP0_GET_COUNT(); // get the current timer count
+    if (S1_GetValue() == 0) {
+        if (currentTime - lastButtonPressTime > DEBOUNCE_TIME * (FCY/1000)) {
+            count++;
+            if (count > 99) {
+                count = 0;
+            }
+            lastButtonPressTime = currentTime; // update the last button press time
+        }
+    }
+}

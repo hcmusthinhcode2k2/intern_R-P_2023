@@ -1,0 +1,31 @@
+Phương pháp quét LED (LED scanning) là một kỹ thuật hiển thị thông dụng được sử dụng trong nhiều ứng dụng điện tử, đặc biệt là khi cần điều khiển nhiều LED hoặc các mảng LED như trong hiển thị LED 7 đoạn hoặc màn hình LED ma trận. Phương pháp này giúp tiết kiệm các chân I/O trên vi điều khiển và giảm số lượng linh kiện cần thiết.
+
+Cách Thức Hoạt Động:
+Phương pháp quét LED hoạt động dựa trên nguyên tắc "định thời đa hợp" (multiplexing). Trong một mảng LED, thay vì cung cấp điện cho từng LED một cách liên tục, các LED sẽ được bật và tắt một cách nhanh chóng theo thứ tự, từng dãy hoặc từng cột một. Do tốc độ chuyển đổi này diễn ra rất nhanh, mắt người không thể nhận ra sự bật tắt đó mà chỉ cảm nhận được như thể tất cả các LED đều sáng đồng thời, nhờ vào hiện tượng hậu quả nhìn (persistence of vision).
+
+Lý do sử dụng:
+Tiết kiệm chân I/O: Đối với một hiển thị nhiều chữ số hoặc ma trận LED lớn, việc sử dụng một chân I/O cho mỗi LED sẽ yêu cầu rất nhiều chân, điều này không khả thi cho các vi điều khiển có số lượng chân hạn chế.
+
+Giảm chi phí: Sử dụng ít chân I/O có nghĩa là có thể sử dụng vi điều khiển có kích cỡ nhỏ hơn và rẻ hơn.
+
+Đơn giản hóa thiết kế PCB: Bảng mạch in (PCB) sẽ đơn giản hơn vì có ít dây dẫn và điểm hàn hơn.
+
+Giảm công suất tiêu thụ: Việc chỉ cung cấp điện cho mỗi LED trong một khoảng thời gian ngắn giúp giảm tổng công suất tiêu thụ của hệ thống.
+
+Cách Triển Khai:
+Trong mã nguồn bạn đã cung cấp, phương pháp quét LED được triển khai như sau:
+
+Mỗi chữ số trên hiển thị LED 7 đoạn được kiểm soát bởi một chân I/O riêng biệt (được gọi là chân DIG_x).
+
+Các chân I/O này sẽ được bật và tắt theo thứ tự để kích hoạt từng chữ số.
+
+Đối với mỗi chữ số, các đoạn LED tương ứng (A-G) sẽ được cấu hình để hiển thị số mong muốn.
+
+Mã nguồn sẽ chạy vòng lặp trong đó liên tục bật tắt các chữ số và cập nhật các đoạn LED để tạo ra hiển thị đúng số.
+
+Chỉ cần nhớ rằng mỗi chữ số chỉ sáng trong một phần thời gian, nhưng vì nó được làm mới một cách nhanh chóng, mắt người sẽ cảm nhận được như thể chúng sáng liên tục. Đây là cơ sở của phương pháp quét LED và lý do tại sao nó rất hữu ích trong các thiết kế đi
+
+
+
+
+
